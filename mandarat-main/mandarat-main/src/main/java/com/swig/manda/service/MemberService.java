@@ -1,0 +1,79 @@
+package com.swig.manda.service;
+
+import com.swig.manda.dto.MemberDto;
+import com.swig.manda.model.Member;
+import com.swig.manda.repository.MemberRepository;
+import jakarta.validation.Valid;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+
+@Service
+@Transactional
+public class MemberService {
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+    @Autowired
+    private MemberRepository memberRepository;
+
+    @Autowired
+    private BCryptPasswordEncoder bCryptPasswordEncoder;
+
+    public void join(@Valid MemberDto memberDto){
+
+        String encodedPassword=passwordEncoder.encode(memberDto.getPassword());
+
+        Member member=new Member();
+        member.setUsername(memberDto.getUsername());
+        member.setPassword(encodedPassword);
+        member.setRole(memberDto.getRole());
+        member.setEmail(memberDto.getEmail());
+
+        memberRepository.save(member);
+
+    }
+
+    public Member registerNewOAuth2User(String provider, String providerId, String username) {
+
+        String encodedPassword = bCryptPasswordEncoder.encode("temporary-password");
+
+        Member user = Member.builder()
+                    .username(username)
+                    .password(encodedPassword)
+                    .role("USER")
+                    .provider(provider)
+                    .providerId(providerId)
+                    .build();
+
+        return memberRepository.save(user);
+    }
+
+
+
+    public Boolean duplicateUsername(String username){
+
+        return memberRepository.existsByUsername(username);
+
+    }
+    public boolean userEmailCheck(String email, String username) {
+       Member member=memberRepository.findByUsername(username);
+       return member!= null&&member.getUsername().equals(username);
+    }
+
+    public void updatePassword(String username, String newPassword) {
+        Member member = memberRepository.findByUsername(username);
+        if (member != null) {
+
+            String encodedNewPassword = bCryptPasswordEncoder.encode(newPassword);
+
+            member.setPassword(encodedNewPassword);
+
+            memberRepository.save(member);
+        }
+    }
+
+}
