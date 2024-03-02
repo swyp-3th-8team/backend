@@ -31,7 +31,6 @@ public class MemberService {
         member.setUsername(memberDto.getUsername());
         member.setPassword(encodedPassword);
         member.setRole(memberDto.getRole());
-        member.setEmail(memberDto.getEmail());
 
         memberRepository.save(member);
 
