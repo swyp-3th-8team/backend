@@ -19,7 +19,7 @@ public class SendMailService {
     private MemberRepository memberRepository;
     @Autowired
     private JavaMailSender mailSender;
-    private static final String FROM_ADDRESS = "sjho714@naver.com";
+    private static final String FROM_ADDRESS = "whdygks4@gmail.com";
 
     public void sendResetPasswordEmail(String email, String username) {
         String tempPassword = generateTemporaryPassword();

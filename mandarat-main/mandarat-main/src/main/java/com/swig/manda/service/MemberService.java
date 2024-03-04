@@ -10,6 +10,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Optional;
+
 
 @Service
 @Transactional
@@ -31,7 +33,8 @@ public class MemberService {
         member.setUsername(memberDto.getUsername());
         member.setPassword(encodedPassword);
         member.setRole(memberDto.getRole());
-
+        member.setEmail(memberDto.getEmail());
+        member.setName(memberDto.getName());
         memberRepository.save(member);
 
     }
@@ -73,6 +76,12 @@ public class MemberService {
 
             memberRepository.save(member);
         }
+    }
+
+    public String findUsernameByEmailAndName(String email, String name) {
+
+        Optional<Member> member = memberRepository.findByEmailAndName(email, name);
+        return member.map(Member::getUsername).orElse(null);
     }
 
 }

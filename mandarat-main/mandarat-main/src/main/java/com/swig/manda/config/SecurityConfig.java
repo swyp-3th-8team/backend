@@ -47,7 +47,7 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers(HttpMethod.POST, "/api/member/login").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/api/member/login","/api/member/check/find_username","/api/member/check/findPw").permitAll()
                         .requestMatchers("/api/member/**").authenticated()
                         .anyRequest().permitAll())
                 .oauth2Login(oauth2 -> oauth2

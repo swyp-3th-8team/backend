@@ -37,12 +37,17 @@ public class Member {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    private String name;
     private String username;
     private String password;
     private String role;
     private String provider;
     private String providerId;
 
+    @NotBlank(message = "이메일은 필수 입력 값입니다.")
+    @Email(message = "이메일 형식에 맞지 않습니다.")
+    private String email;
     @CreationTimestamp
     private LocalDateTime regTime;
     @CreationTimestamp
