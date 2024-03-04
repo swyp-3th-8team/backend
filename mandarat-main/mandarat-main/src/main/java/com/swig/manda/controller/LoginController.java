@@ -1,13 +1,11 @@
 package com.swig.manda.controller;
 
-import com.swig.manda.dto.LoginRequest;
-import com.swig.manda.dto.MailDto;
-import com.swig.manda.dto.MemberDto;
-import com.swig.manda.dto.PWupdateDto;
+import com.swig.manda.dto.*;
 import com.swig.manda.model.Member;
 import com.swig.manda.repository.MemberRepository;
 import com.swig.manda.service.MemberService;
 import com.swig.manda.service.SendMailService;
+import groovy.util.logging.Slf4j;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -26,6 +24,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.Map;
+
 
 
 
@@ -56,9 +55,10 @@ public class LoginController {
 
     // 비밀번호 찾기 요청
     @PostMapping("/check/findPw")
-    public ResponseEntity<String> handleFindPasswordRequest(@RequestBody Map<String, String> requestData) {
-        String email = requestData.get("email");
-        String username = requestData.get("username");
+    public ResponseEntity<String> handleFindPasswordRequest(@RequestBody FindUserpasswordRequest findUserpasswordRequest) {
+        String email = findUserpasswordRequest.getEmail();
+        String username = findUserpasswordRequest.getUsername();
+
         try {
             sendMailService.sendResetPasswordEmail(email, username);
             return ResponseEntity.ok("비밀번호 재설정 이메일을 성공적으로 발송했습니다.");
@@ -67,6 +67,31 @@ public class LoginController {
         }
     }
 
+    //아이디 찾기 요청
+    @PostMapping("/check/find_username")
+    public ResponseEntity<String> handleFindIdRequest(@RequestBody FindUsernameRequest findUsernameRequest){
+
+        System.out.println(11);
+        String email = findUsernameRequest.getEmail();
+        String name = findUsernameRequest.getName();
+
+        System.out.println(email);
+        System.out.println(name);
+        System.out.println(11);
+
+
+        String username=memberService.findUsernameByEmailAndName(email,name);
+
+        if (username != null) {
+
+            return ResponseEntity.ok(username);
+        } else {
+
+            return ResponseEntity.notFound().build();
+        }
+
+
+    }
 
 
     @PostMapping("/login")
