@@ -67,24 +67,31 @@ public class LoginController {
         }
     }
 
+    private String maskUsername(String username) {
+        if (username == null || username.length() <= 2) {
+            return username;
+        }
+
+
+        String masked = username.substring(0, 1) + "*".repeat(2) + username.substring(3,username.length());
+        return masked;
+    }
+
     //아이디 찾기 요청
     @PostMapping("/check/find_username")
     public ResponseEntity<String> handleFindIdRequest(@RequestBody FindUsernameRequest findUsernameRequest){
 
-        System.out.println(11);
+
         String email = findUsernameRequest.getEmail();
         String name = findUsernameRequest.getName();
 
-        System.out.println(email);
-        System.out.println(name);
-        System.out.println(11);
 
 
         String username=memberService.findUsernameByEmailAndName(email,name);
 
         if (username != null) {
 
-            return ResponseEntity.ok(username);
+            return ResponseEntity.ok(maskUsername(username));
         } else {
 
             return ResponseEntity.notFound().build();

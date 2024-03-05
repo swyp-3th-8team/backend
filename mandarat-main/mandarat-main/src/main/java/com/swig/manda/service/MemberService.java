@@ -19,6 +19,8 @@ public class MemberService {
 
     @Autowired
     private PasswordEncoder passwordEncoder;
+
+
     @Autowired
     private MemberRepository memberRepository;
 
@@ -39,14 +41,15 @@ public class MemberService {
 
     }
 
-    public Member registerNewOAuth2User(String provider, String providerId, String username) {
+    public Member registerNewOAuth2User(String provider, String providerId, String nickname,String email) {
 
         String encodedPassword = bCryptPasswordEncoder.encode("temporary-password");
 
         Member user = Member.builder()
-                    .username(username)
+                    .username(nickname)
                     .password(encodedPassword)
                     .role("USER")
+                .email(email)
                     .provider(provider)
                     .providerId(providerId)
                     .build();
@@ -83,5 +86,8 @@ public class MemberService {
         Optional<Member> member = memberRepository.findByEmailAndName(email, name);
         return member.map(Member::getUsername).orElse(null);
     }
+
+
+
 
 }

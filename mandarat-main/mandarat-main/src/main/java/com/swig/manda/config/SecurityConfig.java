@@ -1,5 +1,6 @@
 package com.swig.manda.config;
 
+
 import com.swig.manda.config.oauth.PrincipalOauth2UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
