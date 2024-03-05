@@ -1,10 +1,7 @@
 package com.swig.manda.model;
 
 import com.swig.manda.dto.MemberDto;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;
@@ -27,6 +24,8 @@ import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -54,7 +53,7 @@ public class Member {
     private LocalDateTime loginTime;
 
     @Builder
-    public Member(String username, String password, String role, LocalDateTime regTime,String provider,String providerId, LocalDateTime loginTime) {
+    public Member(String username, String password, String role, LocalDateTime regTime,String provider,String providerId, LocalDateTime loginTime,String email) {
         this.username = username;
         this.password = password;
         this.role = role;
@@ -62,5 +61,17 @@ public class Member {
         this.loginTime = loginTime;
         this.providerId= providerId;
         this.provider=provider;
+        this.email=email;
+    }
+
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<MainTopic> mainTopics;
+
+    public void addMainTopic(MainTopic mainTopic) {
+        if (mainTopics == null) {
+            mainTopics = new ArrayList<>();
+        }
+        mainTopics.add(mainTopic);
+        mainTopic.setMember(this);
     }
 }
