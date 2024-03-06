@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 public class PWupdateDto {
 
     @NotBlank(message = "아이디는 필수입니다.")
-    private String username;
+    private String userid;
     @NotBlank(message = "현재 비밀번호는 필수 입니다.")
     private String  password;
 

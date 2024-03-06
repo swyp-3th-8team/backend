@@ -6,6 +6,7 @@ import com.swig.manda.repository.MemberRepository;
 import com.swig.manda.service.MemberService;
 import com.swig.manda.service.SendMailService;
 import groovy.util.logging.Slf4j;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -28,6 +29,7 @@ import java.util.Map;
 
 
 
+@CrossOrigin(origins ="*", allowedHeaders = "*")
 @RestController
 @RequestMapping("/api/member")
 public class LoginController {
@@ -44,20 +46,12 @@ public class LoginController {
     @Autowired
     private AuthenticationManager authenticationManager;
 
-    // 이건 중복 처리 부분임.
-    @GetMapping("/duplicate")
-    public ResponseEntity<Map<String, Boolean>> duplicate(@RequestParam("username") String username) {
-        boolean isDupplicate = memberService.duplicateUsername(username);
-        Map<String, Boolean> response = new HashMap<>();
-        response.put("중복입니다!", isDupplicate);
-        return ResponseEntity.ok(response);
-    }
 
     // 비밀번호 찾기 요청
     @PostMapping("/check/findPw")
     public ResponseEntity<String> handleFindPasswordRequest(@RequestBody FindUserpasswordRequest findUserpasswordRequest) {
         String email = findUserpasswordRequest.getEmail();
-        String username = findUserpasswordRequest.getUsername();
+        String username = findUserpasswordRequest.getUserid();
 
         try {
             sendMailService.sendResetPasswordEmail(email, username);
@@ -66,6 +60,7 @@ public class LoginController {
             return ResponseEntity.badRequest().body("비밀번호 재설정 이메일 발송에 실패했습니다.");
         }
     }
+
 
     private String maskUsername(String username) {
         if (username == null || username.length() <= 2) {
@@ -83,7 +78,7 @@ public class LoginController {
 
 
         String email = findUsernameRequest.getEmail();
-        String name = findUsernameRequest.getName();
+        String name = findUsernameRequest.getUsername();
 
 
 
@@ -105,7 +100,7 @@ public class LoginController {
     public ResponseEntity<?> authenticateUser(@RequestBody LoginRequest loginRequest) {
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
-                        loginRequest.getUsername(),
+                        loginRequest.getUserid(),
                         loginRequest.getPassword()
                 )
         );
@@ -115,6 +110,8 @@ public class LoginController {
         return ResponseEntity.ok().body("User authenticated successfully");
     }
 
+
+
     // 비밀번호 업데이트 요청!!
     @PostMapping("/pwUpdate")
     public ResponseEntity<String> updatePassword(@RequestBody PWupdateDto pwUpdateDto) {
@@ -123,14 +120,14 @@ public class LoginController {
                 return ResponseEntity.badRequest().body("새 비밀번호와 비밀번호 확인이 일치하지 않습니다.");
             }
 
-            Member member = memberRepository.findByUsername(pwUpdateDto.getUsername());
-            String currentPassword = memberRepository.findPasswordByUsername(pwUpdateDto.getUsername());
+            Member member = memberRepository.findByUserid(pwUpdateDto.getUserid());
+            String currentPassword = memberRepository.findPasswordByUsername(pwUpdateDto.getUserid());
 
             if (member == null || !bCryptPasswordEncoder.matches(pwUpdateDto.getPassword(), currentPassword)) {
                 return ResponseEntity.badRequest().body("현재 비밀번호가 정확하지 않습니다.");
             }
 
-            memberService.updatePassword(pwUpdateDto.getUsername(), pwUpdateDto.getNewPassword());
+            memberService.updatePassword(pwUpdateDto.getUserid(), pwUpdateDto.getNewPassword());
             return ResponseEntity.ok("비밀번호가 성공적으로 업데이트되었습니다.");
         } catch (Exception e) {
             return ResponseEntity.internalServerError().body("비밀번호 업데이트 중 오류가 발생했습니다.");

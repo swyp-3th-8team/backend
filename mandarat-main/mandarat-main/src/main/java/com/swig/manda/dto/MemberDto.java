@@ -16,8 +16,8 @@ public class MemberDto {
 
 
     @Pattern(regexp = "(?=.*[0-9])(?=.*[a-z]).{6,12}", message = "아이디는 6~12자 영문, 숫자를 사용하세요.")
-    //@NotBlank(message = "아이디를 입력하세요.1111111111111111.")
-    private String username;
+
+    private String userid;
     @Pattern(regexp = "(?=.*[0-9])(?=.*[a-z])(?=.*\\W)(?=\\S+$).{8,20}", message = "비밀번호는 8~16자 영문, 숫자, 특수문자를 사용하세요.")
     private String password;
     @Pattern(regexp = "(?=.*[0-9])(?=.*[a-z])(?=.*\\W)(?=\\S+$).{8,20}", message = "비밀번호는 8~16자 영문, 숫자, 특수문자를 사용하세요.")
@@ -25,7 +25,7 @@ public class MemberDto {
     private String repassword;
     private String role;
 
-    private String name;
+    private String username;
 
     @NotBlank(message = "이메일은 필수 입력 값입니다.")
     @Email(message = "이메일 형식에 맞지 않습니다.")
