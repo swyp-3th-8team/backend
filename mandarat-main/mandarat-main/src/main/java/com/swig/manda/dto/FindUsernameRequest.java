@@ -10,5 +10,5 @@ import lombok.Setter;
 public class FindUsernameRequest {
 
     private String email;
-    private String name;
+    private String Username;
 }

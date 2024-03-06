@@ -32,11 +32,11 @@ public class MemberService {
         String encodedPassword=passwordEncoder.encode(memberDto.getPassword());
 
         Member member=new Member();
-        member.setUsername(memberDto.getUsername());
+        member.setUserid(memberDto.getUserid());
         member.setPassword(encodedPassword);
         member.setRole(memberDto.getRole());
         member.setEmail(memberDto.getEmail());
-        member.setName(memberDto.getName());
+        member.setUsername(memberDto.getUsername());
         memberRepository.save(member);
 
     }
@@ -59,18 +59,18 @@ public class MemberService {
 
 
 
-    public Boolean duplicateUsername(String username){
+    public Boolean duplicateUserid(String userid){
 
-        return memberRepository.existsByUsername(username);
+        return memberRepository.existsByUserid(userid);
 
     }
-    public boolean userEmailCheck(String email, String username) {
-       Member member=memberRepository.findByUsername(username);
-       return member!= null&&member.getUsername().equals(username);
+    public boolean userEmailCheck(String email, String userid) {
+       Member member=memberRepository.findByUserid(userid);
+       return member!= null&&member.getUserid().equals(userid);
     }
 
-    public void updatePassword(String username, String newPassword) {
-        Member member = memberRepository.findByUsername(username);
+    public void updatePassword(String userid, String newPassword) {
+        Member member = memberRepository.findByUserid(userid);
         if (member != null) {
 
             String encodedNewPassword = bCryptPasswordEncoder.encode(newPassword);
@@ -81,10 +81,14 @@ public class MemberService {
         }
     }
 
-    public String findUsernameByEmailAndName(String email, String name) {
+    public String findUsernameByEmailAndName(String email, String username) {
 
-        Optional<Member> member = memberRepository.findByEmailAndName(email, name);
-        return member.map(Member::getUsername).orElse(null);
+        Optional<Member> member = memberRepository.findByEmailAndUsername(email,username);
+        return member.map(Member::getUserid).orElse(null);
+    }
+
+    public boolean existsByUserid(String userid) {
+        return memberRepository.existsByUserid(userid);
     }
 
 

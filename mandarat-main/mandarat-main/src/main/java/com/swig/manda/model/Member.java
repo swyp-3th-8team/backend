@@ -37,8 +37,8 @@ public class Member {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String name;
     private String username;
+    private String userid;
     private String password;
     private String role;
     private String provider;
@@ -54,7 +54,7 @@ public class Member {
 
     @Builder
     public Member(String username, String password, String role, LocalDateTime regTime,String provider,String providerId, LocalDateTime loginTime,String email) {
-        this.username = username;
+        this.username=username;
         this.password = password;
         this.role = role;
         this.regTime = regTime;

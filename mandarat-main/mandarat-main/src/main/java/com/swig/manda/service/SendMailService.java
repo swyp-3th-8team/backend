@@ -38,9 +38,9 @@ public class SendMailService {
         return new MailDto(email, title, message);
     }
 
-    private void updatePassword(String username, String tempPassword) {
+    private void updatePassword(String userid, String tempPassword) {
         String encodedPassword = passwordEncoder.encode(tempPassword);
-        memberRepository.updatePasswordByUsername(encodedPassword, username);
+        memberRepository.updatePasswordByUserid(encodedPassword, userid);
     }
 
     private String generateTemporaryPassword() {
