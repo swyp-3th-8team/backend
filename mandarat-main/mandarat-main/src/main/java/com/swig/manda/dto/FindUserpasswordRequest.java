@@ -10,5 +10,5 @@ import lombok.Setter;
 public class FindUserpasswordRequest {
 
     private String email ;
-    private String userid;
+    private String userId;
 }

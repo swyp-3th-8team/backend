@@ -17,7 +17,7 @@ public class MemberDto {
 
     @Pattern(regexp = "(?=.*[0-9])(?=.*[a-z]).{6,12}", message = "아이디는 6~12자 영문, 숫자를 사용하세요.")
 
-    private String userid;
+    private String userId;
     @Pattern(regexp = "(?=.*[0-9])(?=.*[a-z])(?=.*\\W)(?=\\S+$).{8,20}", message = "비밀번호는 8~16자 영문, 숫자, 특수문자를 사용하세요.")
     private String password;
     @Pattern(regexp = "(?=.*[0-9])(?=.*[a-z])(?=.*\\W)(?=\\S+$).{8,20}", message = "비밀번호는 8~16자 영문, 숫자, 특수문자를 사용하세요.")

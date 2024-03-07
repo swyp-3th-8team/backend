@@ -38,7 +38,7 @@ public class Member {
     private Long id;
 
     private String username;
-    private String userid;
+    private String userId;
     private String password;
     private String role;
     private String provider;

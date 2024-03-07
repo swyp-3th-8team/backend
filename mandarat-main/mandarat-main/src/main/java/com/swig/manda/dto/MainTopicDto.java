@@ -7,7 +7,7 @@ public class MainTopicDto {
     private Long id;
     private String title;
 
-    private Long memberid;
+    private Long memberId;
     private List<DetailDto> details;
 
     public Long getId() {
@@ -20,10 +20,10 @@ public class MainTopicDto {
     }
 
     public void setMemberId(Long memberid) {
-        this.memberid = memberid;
+        this.memberId = memberid;
     }
-    public Long getMemberid()
-    {return memberid;}
+    public Long getMemberId()
+    {return memberId;}
 
 
     public String getTitle() {

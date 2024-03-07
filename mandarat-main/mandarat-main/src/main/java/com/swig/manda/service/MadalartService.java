@@ -35,12 +35,12 @@ public class MadalartService {
 
     public MainTopicDto saveMainTopics(MainTopicDto mainTopicDto) {
 
-        Member memberid = memberRepository.findById(mainTopicDto.getMemberid())
-                .orElseThrow(() -> new RuntimeException("MainTopic not found with id: " + mainTopicDto.getMemberid()));
+        Member memberId = memberRepository.findById(mainTopicDto.getMemberId())
+                .orElseThrow(() -> new RuntimeException("MainTopic not found with id: " + mainTopicDto.getMemberId()));
 
         MainTopic mainTopic = new MainTopic();
         mainTopic.setTitle(mainTopicDto.getTitle());
-        mainTopic.setMember(memberid);
+        mainTopic.setMember(memberId);
 
 
         MainTopic savedMainTopic = mainRepository.save(mainTopic);
@@ -166,8 +166,8 @@ public class MadalartService {
             mainTopic.setTitle(mainTopicDto.getTitle());
 
 
-            Member member = memberRepository.findById(mainTopicDto.getMemberid())
-                    .orElseThrow(() -> new RuntimeException("응? id를 찾지 못했습니다. " + mainTopicDto.getMemberid()));
+            Member member = memberRepository.findById(mainTopicDto.getMemberId())
+                    .orElseThrow(() -> new RuntimeException("응? id를 찾지 못했습니다. " + mainTopicDto.getMemberId()));
 
             mainTopic.setMember(member);
 
