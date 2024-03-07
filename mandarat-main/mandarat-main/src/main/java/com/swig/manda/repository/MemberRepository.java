@@ -14,22 +14,24 @@ import java.util.Optional;
 public interface MemberRepository extends JpaRepository<Member,Long> {
 
 
-    Member findByUserid(String userid);
+    Member findByUserId(String userId);
     Member findByEmail(String email);
 
 
-    Boolean existsByUserid(String userid);
+    Boolean existsByUserId(String userId);
 
 
-    @Query("SELECT m.password FROM Member m WHERE m.userid = :userid")
-    String findPasswordByUsername(@Param("userid") String userid);
+    @Query("SELECT m.password FROM Member m WHERE m.userId = :userId")
+    String findPasswordByUserId(@Param("userId") String userId);
 
     Optional<Member> findByEmailAndUsername(String email, String username);
 
 
     @Transactional
     @Modifying(clearAutomatically = true)
-    @Query("UPDATE Member m SET m.password = :password WHERE m.userid= :userid")
-    void updatePasswordByUserid(@Param("password") String password, @Param("userid") String userid);
+    @Query("UPDATE Member m SET m.password = :password WHERE m.userId= :userId")
+    void updatePasswordByUserId(@Param("password") String password, @Param("userId") String userId);
+
+
 }
 

@@ -2,13 +2,16 @@ package com.swig.manda.service;
 
 import com.swig.manda.dto.MailDto;
 import com.swig.manda.repository.MemberRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+@Slf4j
 @Service
 @Transactional
 public class SendMailService {
@@ -21,29 +24,50 @@ public class SendMailService {
     private JavaMailSender mailSender;
     private static final String FROM_ADDRESS = "whdygks4@gmail.com";
 
-    public void sendResetPasswordEmail(String email, String username) {
-        String tempPassword = generateTemporaryPassword();
-        MailDto mailDto = constructResetPasswordEmail(email, username, tempPassword);
-        updatePassword(username, tempPassword);
-        sendEmail(mailDto);
+    public void sendResetPasswordEmail(String email, String userId) {
+        log.info("비밀번호 재설정 이메일 전송 시작: 사용자 {}, 이메일 {}", userId, email);
+
+        try {
+            String tempPassword = generateTemporaryPassword();
+            log.debug("임시 비밀번호 생성: {}", tempPassword);
+
+            MailDto mailDto = constructResetPasswordEmail(email, userId, tempPassword);
+
+            log.debug("비밀번호 재설정 이메일 생성 완료");
+
+
+
+            updatePassword(userId, tempPassword);
+            log.info("사용자 {}의 비밀번호 업데이트 완료", userId);
+
+
+
+            sendEmail(mailDto);
+            log.info("비밀번호 재설정 이메일 발송 완료: 사용자 {}, 이메일 {}", userId, email);
+        } catch (Exception e) {
+            log.error("비밀번호 재설정 이메일 전송 중 오류 발생: 사용자 {}, 이메일 {}", userId, email, e);
+            throw e;
+        }
     }
 
 
-    //이메일 주소,사용자 이름,임시 비밀번호를 인자로 반아 dto객체 생성하고 반환
-    private MailDto constructResetPasswordEmail(String email, String username, String tempPassword) {
-        String title = username + "님의 만다라트 임시 비밀번호 안내 이메일 입니다.";
-        String message = "안녕하세요. 만다라트 임시 비밀번호 안내 관련 이메일 입니다. [" + username + "] 님의 임시 비밀번호는 "
+
+    private MailDto constructResetPasswordEmail(String email, String userId, String tempPassword) {
+
+        String title = userId + "님의 만다라트 임시 비밀번호 안내 이메일 입니다.";
+        String message = "안녕하세요. 만다라트 임시 비밀번호 안내 관련 이메일 입니다. [" + userId + "] 님의 임시 비밀번호는 "
                 + tempPassword + " 입니다.";
 
         return new MailDto(email, title, message);
     }
 
-    private void updatePassword(String userid, String tempPassword) {
+    private void updatePassword(String userId, String tempPassword) {
         String encodedPassword = passwordEncoder.encode(tempPassword);
-        memberRepository.updatePasswordByUserid(encodedPassword, userid);
+        memberRepository.updatePasswordByUserId(encodedPassword, userId);
     }
 
     private String generateTemporaryPassword() {
+
         char[] charSet = new char[] {
                 '0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
                 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J',
@@ -59,6 +83,7 @@ public class SendMailService {
     }
 
     private void sendEmail(MailDto mailDto) {
+
         SimpleMailMessage message = new SimpleMailMessage();
         message.setTo(mailDto.getEmail());
         message.setFrom(FROM_ADDRESS);

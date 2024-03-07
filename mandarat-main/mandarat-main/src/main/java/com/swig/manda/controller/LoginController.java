@@ -51,7 +51,7 @@ public class LoginController {
     @PostMapping("/check/findPw")
     public ResponseEntity<String> handleFindPasswordRequest(@RequestBody FindUserpasswordRequest findUserpasswordRequest) {
         String email = findUserpasswordRequest.getEmail();
-        String username = findUserpasswordRequest.getUserid();
+        String username = findUserpasswordRequest.getUserId();
 
         try {
             sendMailService.sendResetPasswordEmail(email, username);
@@ -100,7 +100,7 @@ public class LoginController {
     public ResponseEntity<?> authenticateUser(@RequestBody LoginRequest loginRequest) {
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
-                        loginRequest.getUserid(),
+                        loginRequest.getUserId(),
                         loginRequest.getPassword()
                 )
         );
@@ -120,14 +120,14 @@ public class LoginController {
                 return ResponseEntity.badRequest().body("새 비밀번호와 비밀번호 확인이 일치하지 않습니다.");
             }
 
-            Member member = memberRepository.findByUserid(pwUpdateDto.getUserid());
-            String currentPassword = memberRepository.findPasswordByUsername(pwUpdateDto.getUserid());
+            Member member = memberRepository.findByUserId(pwUpdateDto.getUserId());
+            String currentPassword = memberRepository.findPasswordByUserId(pwUpdateDto.getUserId());
 
             if (member == null || !bCryptPasswordEncoder.matches(pwUpdateDto.getPassword(), currentPassword)) {
                 return ResponseEntity.badRequest().body("현재 비밀번호가 정확하지 않습니다.");
             }
 
-            memberService.updatePassword(pwUpdateDto.getUserid(), pwUpdateDto.getNewPassword());
+            memberService.updatePassword(pwUpdateDto.getUserId(), pwUpdateDto.getNewPassword());
             return ResponseEntity.ok("비밀번호가 성공적으로 업데이트되었습니다.");
         } catch (Exception e) {
             return ResponseEntity.internalServerError().body("비밀번호 업데이트 중 오류가 발생했습니다.");

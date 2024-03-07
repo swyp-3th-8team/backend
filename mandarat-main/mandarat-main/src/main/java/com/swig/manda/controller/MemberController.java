@@ -38,7 +38,7 @@ public class MemberController {
             return ResponseEntity.badRequest().body("패스워드가 맞지 않습니다!");
         }
 
-        boolean isDuplicateUserid = memberService.existsByUserid(memberDto.getUserid());
+        boolean isDuplicateUserid = memberService.existsByUserid(memberDto.getUserId());
         if (isDuplicateUserid) {
             return ResponseEntity.badRequest().body("이미 사용 중인 사용자명입니다.");
         }

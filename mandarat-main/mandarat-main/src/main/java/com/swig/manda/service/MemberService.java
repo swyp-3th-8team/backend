@@ -32,7 +32,7 @@ public class MemberService {
         String encodedPassword=passwordEncoder.encode(memberDto.getPassword());
 
         Member member=new Member();
-        member.setUserid(memberDto.getUserid());
+        member.setUserId(memberDto.getUserId());
         member.setPassword(encodedPassword);
         member.setRole(memberDto.getRole());
         member.setEmail(memberDto.getEmail());
@@ -61,16 +61,16 @@ public class MemberService {
 
     public Boolean duplicateUserid(String userid){
 
-        return memberRepository.existsByUserid(userid);
+        return memberRepository.existsByUserId(userid);
 
     }
     public boolean userEmailCheck(String email, String userid) {
-       Member member=memberRepository.findByUserid(userid);
-       return member!= null&&member.getUserid().equals(userid);
+       Member member=memberRepository.findByUserId(userid);
+       return member!= null&&member.getUserId().equals(userid);
     }
 
     public void updatePassword(String userid, String newPassword) {
-        Member member = memberRepository.findByUserid(userid);
+        Member member = memberRepository.findByUserId(userid);
         if (member != null) {
 
             String encodedNewPassword = bCryptPasswordEncoder.encode(newPassword);
@@ -84,11 +84,11 @@ public class MemberService {
     public String findUsernameByEmailAndName(String email, String username) {
 
         Optional<Member> member = memberRepository.findByEmailAndUsername(email,username);
-        return member.map(Member::getUserid).orElse(null);
+        return member.map(Member::getUserId).orElse(null);
     }
 
     public boolean existsByUserid(String userid) {
-        return memberRepository.existsByUserid(userid);
+        return memberRepository.existsByUserId(userid);
     }
 
 
