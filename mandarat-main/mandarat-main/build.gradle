@@ -36,7 +36,7 @@ dependencies {
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'org.springframework.security:spring-security-test'
 	implementation 'org.springframework.boot:spring-boot-starter-mail'
-
+	implementation 'javax.servlet:javax.servlet-api:4.0.1'
 	implementation 'nz.net.ultraq.thymeleaf:thymeleaf-layout-dialect'
 }
 

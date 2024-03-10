@@ -1,5 +1,6 @@
 package com.swig.manda.repository;
 
+import com.swig.manda.model.MainTopic;
 import com.swig.manda.model.Member;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -14,11 +15,12 @@ import java.util.Optional;
 public interface MemberRepository extends JpaRepository<Member,Long> {
 
 
-    Member findByUserId(String userId);
+    Optional<Member> findByUserId(String userId);
     Member findByEmail(String email);
 
 
     Boolean existsByUserId(String userId);
+
 
 
     @Query("SELECT m.password FROM Member m WHERE m.userId = :userId")

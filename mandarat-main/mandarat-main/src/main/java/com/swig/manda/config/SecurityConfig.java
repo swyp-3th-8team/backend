@@ -2,6 +2,7 @@ package com.swig.manda.config;
 
 
 import com.swig.manda.config.oauth.PrincipalOauth2UserService;
+import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +30,8 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.SecurityFilterChain;
 
 import org.springframework.http.HttpMethod;
+import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
+import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
@@ -53,11 +56,15 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
                 .csrf(AbstractHttpConfigurer::disable)
-                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED))
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers(HttpMethod.POST, "/api/member/login","/api/member/check/find_username","/api/member/check/findPw","/api/member/pwUpdate").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/api/member/login","/api/member/check/find_username","/api/member/check/findPw","/api/member/pwUpdate","members/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "members/**").permitAll()
+                        .requestMatchers(HttpMethod.PUT, "members/**").permitAll()
                         .requestMatchers("/api/member/**").authenticated()
+                        .requestMatchers("/members/**").authenticated()
                         .anyRequest().permitAll())
+
                 .oauth2Login(oauth2 -> oauth2
                         .loginPage("/member/login")
                         .defaultSuccessUrl("/member/loginSuccess")
@@ -69,6 +76,7 @@ public class SecurityConfig {
                         .clearAuthentication(true)
                         .deleteCookies("JSESSIONID")
                         .permitAll());
+
 
         return http.build();
     }
@@ -88,6 +96,19 @@ public class SecurityConfig {
                 response.setCharacterEncoding("UTF-8");
                 response.getWriter().print("{\"message\":\"로그아웃 되었습니다.\"}");
                 response.getWriter().flush();
+            }
+        };
+    }
+
+    @Bean
+    public AuthenticationSuccessHandler successHandler() {
+        return new SimpleUrlAuthenticationSuccessHandler() {
+            @Override
+            public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
+                super.onAuthenticationSuccess(request, response, authentication);
+
+                System.out.println("Authentication Success for user: " + authentication.getName());
+
             }
         };
     }

@@ -57,11 +57,13 @@ public Member getMember(){
     }
 
     @Override
-    public String getUsername() {
-        return  member.getUsername();
+    public String getUsername() { return this.member.getUserId();
     }
 
 
+    public Long getId() {
+        return member.getId();
+    }
 
 
     @Override

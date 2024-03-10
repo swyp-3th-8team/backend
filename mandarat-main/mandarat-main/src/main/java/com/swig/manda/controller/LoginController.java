@@ -1,5 +1,6 @@
 package com.swig.manda.controller;
 
+import com.swig.manda.config.auth.PrincipalDetails;
 import com.swig.manda.dto.*;
 import com.swig.manda.model.Member;
 import com.swig.manda.repository.MemberRepository;
@@ -23,10 +24,10 @@ import org.springframework.validation.FieldError;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.*;
 
+import java.nio.file.attribute.UserPrincipal;
 import java.util.HashMap;
 import java.util.Map;
-
-
+import java.util.Optional;
 
 
 @CrossOrigin(origins ="*", allowedHeaders = "*")
@@ -104,11 +105,16 @@ public class LoginController {
                         loginRequest.getPassword()
                 )
         );
-
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
-        return ResponseEntity.ok().body("User authenticated successfully");
+        PrincipalDetails principalDetails = (PrincipalDetails) authentication.getPrincipal();
+        String memberId = principalDetails.getUsername();
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("memberId", memberId);
+        return ResponseEntity.ok(response);
     }
+
 
 
 
@@ -120,10 +126,15 @@ public class LoginController {
                 return ResponseEntity.badRequest().body("새 비밀번호와 비밀번호 확인이 일치하지 않습니다.");
             }
 
-            Member member = memberRepository.findByUserId(pwUpdateDto.getUserId());
-            String currentPassword = memberRepository.findPasswordByUserId(pwUpdateDto.getUserId());
+            Optional<Member> optionalMember = memberRepository.findByUserId(pwUpdateDto.getUserId());
+            if (!optionalMember.isPresent()) {
+                return ResponseEntity.badRequest().body("사용자를 찾을 수 없습니다.");
+            }
 
-            if (member == null || !bCryptPasswordEncoder.matches(pwUpdateDto.getPassword(), currentPassword)) {
+            Member member = optionalMember.get();
+            String currentPassword = member.getPassword();
+
+            if (!bCryptPasswordEncoder.matches(pwUpdateDto.getPassword(), currentPassword)) {
                 return ResponseEntity.badRequest().body("현재 비밀번호가 정확하지 않습니다.");
             }
 
@@ -133,4 +144,5 @@ public class LoginController {
             return ResponseEntity.internalServerError().body("비밀번호 업데이트 중 오류가 발생했습니다.");
         }
     }
+
 }
