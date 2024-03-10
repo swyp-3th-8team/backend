@@ -4,6 +4,8 @@ import com.swig.manda.dto.MemberDto;
 import com.swig.manda.model.Member;
 import com.swig.manda.repository.MemberRepository;
 import jakarta.validation.Valid;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -59,26 +61,19 @@ public class MemberService {
 
 
 
-    public Boolean duplicateUserid(String userid){
 
-        return memberRepository.existsByUserId(userid);
-
-    }
     public boolean userEmailCheck(String email, String userid) {
-       Member member=memberRepository.findByUserId(userid);
-       return member!= null&&member.getUserId().equals(userid);
+        Optional<Member> optionalMember = memberRepository.findByUserId(userid);
+        return optionalMember.map(member -> member.getEmail().equals(email) && member.getUserId().equals(userid)).orElse(false);
     }
 
     public void updatePassword(String userid, String newPassword) {
-        Member member = memberRepository.findByUserId(userid);
-        if (member != null) {
-
+        Optional<Member> optionalMember = memberRepository.findByUserId(userid);
+        optionalMember.ifPresent(member -> {
             String encodedNewPassword = bCryptPasswordEncoder.encode(newPassword);
-
             member.setPassword(encodedNewPassword);
-
             memberRepository.save(member);
-        }
+        });
     }
 
     public String findUsernameByEmailAndName(String email, String username) {
@@ -87,8 +82,13 @@ public class MemberService {
         return member.map(Member::getUserId).orElse(null);
     }
 
-    public boolean existsByUserid(String userid) {
-        return memberRepository.existsByUserId(userid);
+
+    private static final Logger log = LoggerFactory.getLogger(MemberService.class);
+
+
+    public boolean existsByUserid(String userId) {
+        boolean exists = memberRepository.existsByUserId(userId);;
+        return exists;
     }
 
 

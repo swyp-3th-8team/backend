@@ -34,42 +34,42 @@ public class MadalartService {
     }
 
     public MainTopicDto saveMainTopics(MainTopicDto mainTopicDto) {
-
-        Member memberId = memberRepository.findById(mainTopicDto.getMemberId())
-                .orElseThrow(() -> new RuntimeException("MainTopic not found with id: " + mainTopicDto.getMemberId()));
+        // userId를 사용하여 Member 조회
+        Member member = memberRepository.findByUserId(mainTopicDto.getUserId())
+                .orElseThrow(() -> new RuntimeException("Member not found with userId: " + mainTopicDto.getUserId()));
 
         MainTopic mainTopic = new MainTopic();
         mainTopic.setTitle(mainTopicDto.getTitle());
-        mainTopic.setMember(memberId);
-
+        mainTopic.setMember(member);
 
         MainTopic savedMainTopic = mainRepository.save(mainTopic);
 
-
         MainTopicDto savedDto = new MainTopicDto();
-
         savedDto.setId(savedMainTopic.getId());
         savedDto.setTitle(savedMainTopic.getTitle());
 
 
-        List<DetailDto> detailDtos = savedMainTopic.getDetails().stream()
-                .map(this::convertDetailEntityToDto)
-                .collect(Collectors.toList());
-        savedDto.setDetails(detailDtos);
-        savedDto.setMemberId(savedMainTopic.getMember().getId());
+        if (savedMainTopic.getDetails() != null) {
+            List<DetailDto> detailDtos = savedMainTopic.getDetails().stream()
+                    .map(this::convertDetailEntityToDto)
+                    .collect(Collectors.toList());
+            savedDto.setDetails(detailDtos);
+        }
 
-
-
+        savedDto.setUserId(savedMainTopic.getMember().getUserId());
 
         return savedDto;
     }
 
 
-    public List<MainTopicDto> getAllMainTopics(Long memberId){
-        List<MainTopic> mainTopics = mainRepository.findByMember_Id(memberId);
+
+    public List<MainTopicDto> getAllMainTopicsByUserId(String userId) {
+
+        List<MainTopic> mainTopics = mainRepository.findByMember_UserId(userId);
+
 
         List<MainTopicDto> mainTopicDtos = mainTopics.stream()
-                .map(this::convertEntityToDto)
+                .map(this::convertEntityToDto) // MainTopic 엔티티를 MainTopicDto로 변환하는 메서드
                 .collect(Collectors.toList());
 
         return mainTopicDtos;
@@ -79,7 +79,7 @@ public class MadalartService {
         MainTopicDto mainTopicDto = new MainTopicDto();
         mainTopicDto.setId(mainTopic.getId());
         mainTopicDto.setTitle(mainTopic.getTitle());
-        mainTopicDto.setMemberId(mainTopic.getMember().getId());
+        mainTopicDto.setUserId(mainTopic.getMember().getUserId());
         List<DetailDto> detailDtos = mainTopic.getDetails().stream()
                 .map(this::convertDetailEntityToDto)
                 .collect(Collectors.toList());
@@ -89,8 +89,8 @@ public class MadalartService {
         return mainTopicDto;
     }
 
-    public MainTopicDto getMainTopicWithSubTopicsByMemberId(Long topicId, Long memberId) {
-        Optional<MainTopic> mainTopicOpt = mainRepository.findByIdAndMember_Id(topicId, memberId);
+    public MainTopicDto getMainTopicWithSubTopicsByUserId(Long topicId, String  userId) {
+        Optional<MainTopic> mainTopicOpt = mainRepository.findByIdAndMember_UserId(topicId,userId);
 
         if (mainTopicOpt.isPresent()) {
             MainTopic mainTopic = mainTopicOpt.get();
@@ -106,7 +106,7 @@ public class MadalartService {
 
 
             if (mainTopic.getMember() != null) {
-                mainTopicDto.setMemberId(mainTopic.getMember().getId());
+                mainTopicDto.setUserId(userId);
             }
 
             return mainTopicDto;
@@ -166,8 +166,8 @@ public class MadalartService {
             mainTopic.setTitle(mainTopicDto.getTitle());
 
 
-            Member member = memberRepository.findById(mainTopicDto.getMemberId())
-                    .orElseThrow(() -> new RuntimeException("응? id를 찾지 못했습니다. " + mainTopicDto.getMemberId()));
+            Member member = memberRepository.findByUserId(mainTopicDto.getUserId())
+                    .orElseThrow(() -> new RuntimeException("응? id를 찾지 못했습니다. " + mainTopicDto.getUserId()));
 
             mainTopic.setMember(member);
 
@@ -178,7 +178,7 @@ public class MadalartService {
             MainTopicDto savedDto = new MainTopicDto();
             savedDto.setId(mainTopic.getId());
             savedDto.setTitle(mainTopic.getTitle());
-            savedDto.setMemberId(member.getId());
+            savedDto.setUserId(member.getUserId());
 
             return savedDto;
         } else {

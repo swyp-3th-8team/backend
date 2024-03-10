@@ -1,14 +1,20 @@
 package com.swig.manda.dto;
 
+import jakarta.validation.constraints.Pattern;
+
 import java.util.List;
 
 
 public class MainTopicDto {
     private Long id;
+
+    @Pattern(regexp = ".{0,15}", message = "주제는 15자 이하로 입력해주세요.")
     private String title;
 
-    private Long memberId;
     private List<DetailDto> details;
+
+
+    private String userId;
 
     public Long getId() {
         return id;
@@ -19,11 +25,12 @@ public class MainTopicDto {
         this.id = id;
     }
 
-    public void setMemberId(Long memberid) {
-        this.memberId = memberid;
+    public void setUserId(String userId) {
+        this.userId = userId;
     }
-    public Long getMemberId()
-    {return memberId;}
+
+    public String getUserId()
+    {return userId;}
 
 
     public String getTitle() {

@@ -9,7 +9,7 @@ import java.util.Optional;
 
 // MainRepository.java
 public interface MainRepository extends JpaRepository<MainTopic, Long> {
-    List<MainTopic> findByMember_Id(Long memberId);
-    Optional<MainTopic> findByIdAndMember_Id(Long id, Long memberId);
+    List<MainTopic> findByMember_UserId(String userId);
+    Optional<MainTopic> findByIdAndMember_UserId(Long topicId, String userId);
 
 }
