@@ -58,7 +58,7 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED))
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers(HttpMethod.POST, "/api/member/login","/api/member/check/find_username","/api/member/check/findPw","/api/member/pwUpdate","members/**").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/api/member/**","members/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "members/**").permitAll()
                         .requestMatchers(HttpMethod.PUT, "members/**").permitAll()
                         .requestMatchers("/api/member/**").authenticated()

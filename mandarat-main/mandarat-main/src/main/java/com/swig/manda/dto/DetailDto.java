@@ -16,4 +16,6 @@ public class DetailDto {
 
     private String UserId;
 
+    private String memo;
+
 }

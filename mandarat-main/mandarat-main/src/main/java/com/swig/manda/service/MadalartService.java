@@ -121,7 +121,9 @@ public class MadalartService {
         DetailDto detailDto = new DetailDto();
         detailDto.setId(detail.getId());
         detailDto.setContent(detail.getContent());
+        detailDto.setMemo(detail.getMemo());
         detailDto.setMainTopicId(detail.getMainTopic().getId());
+        detailDto.setUserId(detail.getMainTopic().getMember().getUserId());
         return detailDto;
 
 
@@ -137,7 +139,8 @@ public class MadalartService {
 
         Detail detail = new Detail();
         detail.setContent(detailDto.getContent());
-        detail.setMainTopic(mainTopic); // 여기서 MainTopic 설정
+        detail.setMainTopic(mainTopic);
+        detail.setMemo(detailDto.getMemo());// 여기서 MainTopic 설정
 
 
         Detail savedDetail = detailRepository.save(detail);
@@ -146,16 +149,11 @@ public class MadalartService {
         DetailDto savedDetailDto = new DetailDto();
         savedDetailDto.setId(savedDetail.getId());
         savedDetailDto.setContent(savedDetail.getContent());
+        savedDetailDto.setMemo(savedDetail.getMemo());
         savedDetailDto.setMainTopicId(savedDetail.getMainTopic().getId());
+        savedDetailDto.setUserId(detail.getMainTopic().getMember().getUserId());
 
         return savedDetailDto;
-    }
-    public void deleteAllMainTopics() {
-        mainRepository.deleteAll();
-    }
-
-    public void deleteAlldetail(){
-        detailRepository.deleteAll();
     }
 
 
@@ -193,14 +191,16 @@ public class MadalartService {
             Detail detail = detailOptional.get();
 
             detail.setContent(detailDto.getContent());
+            detail.setMemo(detailDto.getMemo());
 
             detailRepository.save(detail);
 
             DetailDto savedDto = new DetailDto();
             savedDto.setId(detail.getId());
             savedDto.setContent(detail.getContent());
-
+            savedDto.setMemo(detail.getMemo());
             savedDto.setMainTopicId(detail.getMainTopic().getId());
+            savedDto.setUserId(detail.getMainTopic().getMember().getUserId());
 
             return savedDto;
         } else {
