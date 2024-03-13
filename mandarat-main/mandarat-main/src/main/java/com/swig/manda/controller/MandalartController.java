@@ -19,7 +19,7 @@ import java.util.List;
 
 
 
-@CrossOrigin(origins ="*", allowedHeaders = "*")
+
 @RestController
 @RequestMapping("/members/{userId}")
 public class MandalartController {
