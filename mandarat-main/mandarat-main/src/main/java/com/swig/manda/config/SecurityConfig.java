@@ -34,8 +34,12 @@ import org.springframework.security.web.authentication.AuthenticationSuccessHand
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import java.io.IOException;
+import java.util.Arrays;
 
 @EnableWebSecurity
 @Configuration
@@ -64,7 +68,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/member/**").authenticated()
                         .requestMatchers("/members/**").authenticated()
                         .anyRequest().permitAll())
-
+                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .oauth2Login(oauth2 -> oauth2
                         .loginPage("/member/login")
                         .defaultSuccessUrl("/member/loginSuccess")
@@ -111,6 +115,19 @@ public class SecurityConfig {
 
             }
         };
+    }
+
+    @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
+        configuration.setAllowedOrigins(Arrays.asList("*"));
+        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"));
+        configuration.setAllowedHeaders(Arrays.asList("*"));
+        configuration.setAllowCredentials(true);
+        configuration.setMaxAge(3600L);
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration);
+        return source;
     }
 }
 

@@ -24,28 +24,16 @@ public class SendMailService {
     private JavaMailSender mailSender;
     private static final String FROM_ADDRESS = "whdygks4@gmail.com";
 
-    public void sendResetPasswordEmail(String email, String userId) {
-        log.info("비밀번호 재설정 이메일 전송 시작: 사용자 {}, 이메일 {}", userId, email);
+    public void sendResetPasswordEmail(String email, String userId)  {
+
 
         try {
             String tempPassword = generateTemporaryPassword();
-            log.debug("임시 비밀번호 생성: {}", tempPassword);
-
             MailDto mailDto = constructResetPasswordEmail(email, userId, tempPassword);
-
-            log.debug("비밀번호 재설정 이메일 생성 완료");
-
-
-
             updatePassword(userId, tempPassword);
-            log.info("사용자 {}의 비밀번호 업데이트 완료", userId);
-
-
-
             sendEmail(mailDto);
-            log.info("비밀번호 재설정 이메일 발송 완료: 사용자 {}, 이메일 {}", userId, email);
         } catch (Exception e) {
-            log.error("비밀번호 재설정 이메일 전송 중 오류 발생: 사용자 {}, 이메일 {}", userId, email, e);
+
             throw e;
         }
     }

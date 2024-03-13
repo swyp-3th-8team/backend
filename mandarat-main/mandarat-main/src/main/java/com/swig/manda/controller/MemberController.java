@@ -43,8 +43,13 @@ public class MemberController {
     public ResponseEntity<?> joinSave(@Valid @RequestBody MemberDto memberDto, BindingResult bindingResult) {
         if (bindingResult.hasErrors()){
 
-            return ResponseEntity.badRequest().body(bindingResult.getAllErrors());
+            if (bindingResult.hasFieldErrors("password")) {
 
+                return ResponseEntity.badRequest().body("비밀번호 형식을 다시확인해주세요");
+            }
+            if (bindingResult.hasFieldErrors("email")){
+                return ResponseEntity.badRequest().body("이메일 형식을 다시 확인해주세요");
+            }
         }
         if (!memberDto.getPassword().equals(memberDto.getRepassword())) {
 
