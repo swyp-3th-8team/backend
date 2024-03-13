@@ -31,7 +31,7 @@ import java.util.Map;
 import java.util.Optional;
 
 
-@CrossOrigin(origins ="*", allowedHeaders = "*")
+
 @RestController
 @RequestMapping("/api/member")
 public class LoginController {

@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.*;
 
 
 @Slf4j
-@CrossOrigin(origins ="*", allowedHeaders = "*")
+
 @RestController
 @RequestMapping("/member")
 public class MemberController {
