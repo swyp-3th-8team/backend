@@ -25,6 +25,7 @@ import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.*;
 
 import java.nio.file.attribute.UserPrincipal;
+import java.security.Principal;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -99,21 +100,44 @@ public class LoginController {
 
     @PostMapping("/login")
     public ResponseEntity<?> authenticateUser(@RequestBody LoginRequest loginRequest) {
-        Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(
-                        loginRequest.getUserId(),
-                        loginRequest.getPassword()
-                )
-        );
-        SecurityContextHolder.getContext().setAuthentication(authentication);
+        try{
+            Authentication authentication = authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(
+                            loginRequest.getUserId(),
+                            loginRequest.getPassword()
+                    )
+            );
 
-        PrincipalDetails principalDetails = (PrincipalDetails) authentication.getPrincipal();
-        String memberId = principalDetails.getUsername();
+            SecurityContextHolder.getContext().setAuthentication(authentication);
 
-        Map<String, Object> response = new HashMap<>();
-        response.put("memberId", memberId);
-        return ResponseEntity.ok(response);
+            PrincipalDetails principalDetails = (PrincipalDetails) authentication.getPrincipal();
+            String memberId = principalDetails.getUsername();
+
+            Map<String, Object> response = new HashMap<>();
+            response.put("로그인에 성공했습니다.user Id는", memberId);
+            return ResponseEntity.ok(response);
+
+        }catch (Exception e){
+            return ResponseEntity.badRequest().body("아이디 또는 비밀번호가 일치하지않습니다.");
+        }
+
     }
+
+    @GetMapping("/oauth2/login/success")
+    public ResponseEntity<?> oauth2LoginSuccess(Principal principal){
+        if (principal instanceof PrincipalDetails){
+            PrincipalDetails principalDetails =(PrincipalDetails) principal;
+            Member userEntity=principalDetails.getMember();
+            Map<String,Object> response=new HashMap<>();
+            response.put("UserId",userEntity.getUsername());
+            response.put("email",userEntity.getEmail());
+
+            return ResponseEntity.ok(response);
+        }
+        return ResponseEntity.badRequest().body("인증에 실패하였습니다.");
+    }
+
+
 
 
 
