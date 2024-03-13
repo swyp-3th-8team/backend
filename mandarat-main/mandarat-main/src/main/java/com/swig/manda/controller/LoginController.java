@@ -51,9 +51,19 @@ public class LoginController {
 
     // 비밀번호 찾기 요청
     @PostMapping("/check/findPw")
-    public ResponseEntity<String> handleFindPasswordRequest(@RequestBody FindUserpasswordRequest findUserpasswordRequest) {
+    public ResponseEntity<String> handleFindPasswordRequest(@Valid @RequestBody FindUserpasswordRequest findUserpasswordRequest) {
         String email = findUserpasswordRequest.getEmail();
         String username = findUserpasswordRequest.getUserId();
+
+        boolean userExists = memberRepository.existsByUserId(username);
+        if (!userExists) {
+            return ResponseEntity.badRequest().body("아이디를 잘못 입력하셨습니다.");
+        }
+
+        boolean emailExists = memberRepository.existsByEmail(email);
+        if(!emailExists){
+            return ResponseEntity.badRequest().body("이메일 형식을 다시 확인해주세요.");
+        }
 
         try {
             sendMailService.sendResetPasswordEmail(email, username);
@@ -76,11 +86,23 @@ public class LoginController {
 
     //아이디 찾기 요청
     @PostMapping("/check/find_username")
-    public ResponseEntity<String> handleFindIdRequest(@RequestBody FindUsernameRequest findUsernameRequest){
+    public ResponseEntity<String> handleFindIdRequest(@Valid @RequestBody FindUsernameRequest findUsernameRequest){
 
 
         String email = findUsernameRequest.getEmail();
         String name = findUsernameRequest.getUsername();
+
+        boolean emailExists = memberRepository.existsByEmail(email);
+
+        if(!emailExists){
+            return ResponseEntity.badRequest().body("이메일 형식을 다시 확인해주세요.");
+        }
+
+        boolean nameExists = memberRepository.existsByUsername(name);
+        if(!nameExists){
+            return ResponseEntity.badRequest().body("존재하지 않는 사용자 이름입니다.");
+        }
+
 
 
 
@@ -144,8 +166,13 @@ public class LoginController {
 
     // 비밀번호 업데이트 요청!!
     @PostMapping("/pwUpdate")
-    public ResponseEntity<String> updatePassword(@RequestBody PWupdateDto pwUpdateDto) {
+    public ResponseEntity<String> updatePassword(@Valid @RequestBody PWupdateDto pwUpdateDto,BindingResult bindingResult) {
         try {
+            if (bindingResult.hasFieldErrors("newPassword")) {
+                return ResponseEntity.badRequest().body("비밀번호 형식을 다시확인해주세요");
+            }
+
+
             if (!pwUpdateDto.getNewPassword().equals(pwUpdateDto.getNewRepassword())) {
                 return ResponseEntity.badRequest().body("새 비밀번호와 비밀번호 확인이 일치하지 않습니다.");
             }
@@ -164,6 +191,7 @@ public class LoginController {
 
             memberService.updatePassword(pwUpdateDto.getUserId(), pwUpdateDto.getNewPassword());
             return ResponseEntity.ok("비밀번호가 성공적으로 업데이트되었습니다.");
+
         } catch (Exception e) {
             return ResponseEntity.internalServerError().body("비밀번호 업데이트 중 오류가 발생했습니다.");
         }
