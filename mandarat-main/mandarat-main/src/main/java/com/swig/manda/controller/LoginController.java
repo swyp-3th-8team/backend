@@ -136,7 +136,8 @@ public class LoginController {
             String memberId = principalDetails.getUsername();
 
             Map<String, Object> response = new HashMap<>();
-            response.put("로그인에 성공했습니다.user Id는", memberId);
+            response.put("message","로그인에 성공했습니다.");
+            response.put("userId:", memberId);
             return ResponseEntity.ok(response);
 
         }catch (Exception e){
@@ -168,26 +169,28 @@ public class LoginController {
     @PostMapping("/pwUpdate")
     public ResponseEntity<String> updatePassword(@Valid @RequestBody PWupdateDto pwUpdateDto,BindingResult bindingResult) {
         try {
+
+            Optional<Member> optionalMember = memberRepository.findByUserId(pwUpdateDto.getUserId());
+            Member member = optionalMember.get();
+            String currentPassword = member.getPassword();
+
+            if (!optionalMember.isPresent()) {
+                return ResponseEntity.badRequest().body("사용자를 찾을 수 없습니다.");
+            }
+
+            if (!bCryptPasswordEncoder.matches(pwUpdateDto.getPassword(), currentPassword)) {
+                return ResponseEntity.badRequest().body("현재 비밀번호가 정확하지 않습니다.");
+            }
+
+
             if (bindingResult.hasFieldErrors("newPassword")) {
                 return ResponseEntity.badRequest().body("비밀번호 형식을 다시확인해주세요");
             }
-
 
             if (!pwUpdateDto.getNewPassword().equals(pwUpdateDto.getNewRepassword())) {
                 return ResponseEntity.badRequest().body("새 비밀번호와 비밀번호 확인이 일치하지 않습니다.");
             }
 
-            Optional<Member> optionalMember = memberRepository.findByUserId(pwUpdateDto.getUserId());
-            if (!optionalMember.isPresent()) {
-                return ResponseEntity.badRequest().body("사용자를 찾을 수 없습니다.");
-            }
-
-            Member member = optionalMember.get();
-            String currentPassword = member.getPassword();
-
-            if (!bCryptPasswordEncoder.matches(pwUpdateDto.getPassword(), currentPassword)) {
-                return ResponseEntity.badRequest().body("현재 비밀번호가 정확하지 않습니다.");
-            }
 
             memberService.updatePassword(pwUpdateDto.getUserId(), pwUpdateDto.getNewPassword());
             return ResponseEntity.ok("비밀번호가 성공적으로 업데이트되었습니다.");
