@@ -39,34 +39,24 @@ public class MadalartService {
         this.titleRepository=titleRepository;
     }
 
-    public MainTopicDto saveMainTopics(MainTopicDto mainTopicDto) {
+    public MainTopicDto saveMainTopic(MainTopicDto mainTopicDto) {
         Member member = memberRepository.findByUserId(mainTopicDto.getUserId())
                 .orElseThrow(() -> new RuntimeException("Member not found with userId: " + mainTopicDto.getUserId()));
 
         MainTopic mainTopic = new MainTopic();
-        mainTopic.setGoal(mainTopicDto.getGoal());
+        mainTopic.setMissionList(mainTopicDto.getMissionList()); // 직접 할당
         mainTopic.setMember(member);
 
-        System.out.println(mainTopic.getGoal());
         MainTopic savedMainTopic = mainRepository.save(mainTopic);
 
+        MainTopicDto dto = new MainTopicDto();
+        dto.setId(savedMainTopic.getId());
+        dto.setMissionList(savedMainTopic.getMissionList()); // 직접 사용
+        dto.setUserId(savedMainTopic.getMember().getUserId());
 
-        MainTopicDto savedDto = new MainTopicDto();
-        savedDto.setId(savedMainTopic.getId());
-        savedDto.setGoal(savedMainTopic.getGoal());
-
-
-        if (savedMainTopic.getDetails() != null) {
-            List<DetailDto> detailDtos = savedMainTopic.getDetails().stream()
-                    .map(this::convertDetailEntityToDto)
-                    .collect(Collectors.toList());
-            savedDto.setDetails(detailDtos);
-        }
-
-        savedDto.setUserId(savedMainTopic.getMember().getUserId());
-
-        return savedDto;
+        return dto;
     }
+
 
     public TitleDto saveTitle(TitleDto titleDto){
 
@@ -88,6 +78,25 @@ public class MadalartService {
 
     }
 
+    public DetailDto saveDetails(DetailDto detailDto) {
+        Member member = memberRepository.findByUserId(detailDto.getUserId())
+                .orElseThrow(() -> new RuntimeException("Member not found with userId: " + detailDto.getUserId()));
+
+        Detail detail = new Detail();
+        detail.setGoalList(detailDto.getGoalList());
+        detail.setGoalText(detailDto.getGoalText());// 직접 할당
+        detail.setMember(member);
+
+        Detail savedDetail = detailRepository.save(detail);
+
+        DetailDto dto = new DetailDto();
+        dto.setMissionIndex(savedDetail.getMissionIndex());
+        dto.setGoalText(savedDetail.getGoalText());
+        dto.setGoalList(savedDetail.getGoalList());
+        dto.setUserId(savedDetail.getMember().getUserId());
+
+        return dto;
+    }
 
 
     public List<MainTopicDto> getAllMainTopicsByUserId(String userId) {
@@ -96,7 +105,7 @@ public class MadalartService {
 
 
         List<MainTopicDto> mainTopicDtos = mainTopics.stream()
-                .map(this::convertEntityToDto) // MainTopic 엔티티를 MainTopicDto로 변환하는 메서드
+                .map(this::convertEntityToDto)
                 .collect(Collectors.toList());
 
         return mainTopicDtos;
@@ -115,55 +124,33 @@ public class MadalartService {
 
     }
 
+    public List<DetailDto> getAllDetailsByUserId(String userId) {
+
+        List<Detail> details = detailRepository.findByMember_UserId(userId);
+
+
+        List<DetailDto> detailDtos = details.stream()
+                .map(this::convertDetailEntityToDto)
+                .collect(Collectors.toList());
+
+        return detailDtos;
+    }
+
     private MainTopicDto convertEntityToDto(MainTopic mainTopic) {
         MainTopicDto mainTopicDto = new MainTopicDto();
         mainTopicDto.setId(mainTopic.getId());
-        mainTopicDto.setGoal(mainTopic.getGoal());
+        mainTopicDto.setMissionList(mainTopic.getMissionList());
         mainTopicDto.setUserId(mainTopic.getMember().getUserId());
-        List<DetailDto> detailDtos = mainTopic.getDetails().stream()
-                .map(this::convertDetailEntityToDto)
-                .collect(Collectors.toList());
-        mainTopicDto.setDetails(detailDtos);
-
 
         return mainTopicDto;
     }
 
-    public MainTopicDto getMainTopicWithSubTopicsByUserId(Long topicId, String  userId) {
-        Optional<MainTopic> mainTopicOpt = mainRepository.findByIdAndMember_UserId(topicId,userId);
-
-        if (mainTopicOpt.isPresent()) {
-            MainTopic mainTopic = mainTopicOpt.get();
-
-            List<Detail> details = detailRepository.findByMainTopicId(mainTopic.getId());
-
-            MainTopicDto mainTopicDto = convertEntityToDto(mainTopic);
-
-            List<DetailDto> detailDtos = details.stream()
-                    .map(this::convertDetailEntityToDto)
-                    .collect(Collectors.toList());
-            mainTopicDto.setDetails(detailDtos);
-
-
-            if (mainTopic.getMember() != null) {
-                mainTopicDto.setUserId(userId);
-            }
-
-            return mainTopicDto;
-        } else {
-            // 메인 토픽이 존재하지 않을 경우 null 반환
-            return null;
-        }
-    }
-
-
     private DetailDto convertDetailEntityToDto(Detail detail) {
         DetailDto detailDto = new DetailDto();
-        detailDto.setId(detail.getId());
-        detailDto.setContent(detail.getContent());
-        detailDto.setMemo(detail.getMemo());
-        detailDto.setMainTopicId(detail.getMainTopic().getId());
-        detailDto.setUserId(detail.getMainTopic().getMember().getUserId());
+        detailDto.setMissionIndex(detail.getMissionIndex());
+        detailDto.setGoalText(detail.getGoalText());
+        detailDto.setGoalList(detail.getGoalList());
+        detailDto.setUserId(detail.getMember().getUserId());
         return detailDto;
 
 
@@ -171,58 +158,23 @@ public class MadalartService {
 
 
 
-    public  DetailDto saveDetail(DetailDto detailDto) {
-
-        MainTopic mainTopic = mainRepository.findById(detailDto.getMainTopicId())
-                .orElseThrow(() -> new RuntimeException("MainTopic not found with id: " + detailDto.getMainTopicId()));
-
-
-        Detail detail = new Detail();
-        detail.setContent(detailDto.getContent());
-        detail.setMainTopic(mainTopic);
-        detail.setMemo(detailDto.getMemo());// 여기서 MainTopic 설정
+    public MainTopicDto updateMainTopic(Long mainId, MainTopicDto mainTopicDto) {
+        MainTopic mainTopic = mainRepository.findById(mainId)
+                .orElseThrow(() -> new RuntimeException("MainTopic not found with id: " + mainId));
 
 
-        Detail savedDetail = detailRepository.save(detail);
+        mainTopic.setMissionList(mainTopicDto.getMissionList());
+        MainTopic updatedMainTopic = mainRepository.save(mainTopic);
 
 
-        DetailDto savedDetailDto = new DetailDto();
-        savedDetailDto.setId(savedDetail.getId());
-        savedDetailDto.setContent(savedDetail.getContent());
-        savedDetailDto.setMemo(savedDetail.getMemo());
-        savedDetailDto.setMainTopicId(savedDetail.getMainTopic().getId());
-        savedDetailDto.setUserId(detail.getMainTopic().getMember().getUserId());
+        MainTopicDto dto = new MainTopicDto();
+        dto.setId(updatedMainTopic.getId());
+        dto.setMissionList(updatedMainTopic.getMissionList());
+        dto.setUserId(updatedMainTopic.getMember().getUserId());
 
-        return savedDetailDto;
+        return dto;
     }
 
-
-    public MainTopicDto updateMainTopic(Long topicId, MainTopicDto mainTopicDto) {
-        Optional<MainTopic> mainTopicOptional = mainRepository.findById(topicId);
-        if (mainTopicOptional.isPresent()) {
-            MainTopic mainTopic = mainTopicOptional.get();
-            mainTopic.setGoal(mainTopicDto.getGoal());
-
-
-            Member member = memberRepository.findByUserId(mainTopicDto.getUserId())
-                    .orElseThrow(() -> new RuntimeException("응? id를 찾지 못했습니다. " + mainTopicDto.getUserId()));
-
-            mainTopic.setMember(member);
-
-
-            mainRepository.save(mainTopic);
-
-
-            MainTopicDto savedDto = new MainTopicDto();
-            savedDto.setId(mainTopic.getId());
-            savedDto.setGoal(mainTopic.getGoal());
-            savedDto.setUserId(member.getUserId());
-
-            return savedDto;
-        } else {
-            return null;
-        }
-    }
 
     public TitleDto updateTitle(Long titleId, TitleDto titleDto) {
         Optional<Title> titleOptional = titleRepository.findById(titleId);
@@ -253,27 +205,26 @@ public class MadalartService {
 
 
     public DetailDto updateDetail(Long detailId, DetailDto detailDto) {
-        Optional<Detail> detailOptional = detailRepository.findById(detailId);
-        if (detailOptional.isPresent()) {
-            Detail detail = detailOptional.get();
+        Detail detail = detailRepository.findById(detailId)
+                .orElseThrow(() -> new RuntimeException("Detail not found with id: " + detailId));
 
-            detail.setContent(detailDto.getContent());
-            detail.setMemo(detailDto.getMemo());
 
-            detailRepository.save(detail);
+        detail.setGoalList(detailDto.getGoalList());
+        detail.setGoalText(detailDto.getGoalText());
 
-            DetailDto savedDto = new DetailDto();
-            savedDto.setId(detail.getId());
-            savedDto.setContent(detail.getContent());
-            savedDto.setMemo(detail.getMemo());
-            savedDto.setMainTopicId(detail.getMainTopic().getId());
-            savedDto.setUserId(detail.getMainTopic().getMember().getUserId());
 
-            return savedDto;
-        } else {
-            return null;
-        }
+        Detail savedDetail = detailRepository.save(detail);
+
+
+        DetailDto updatedDto = new DetailDto();
+        updatedDto.setMissionIndex(savedDetail.getMissionIndex());
+        updatedDto.setGoalList(savedDetail.getGoalList());
+        updatedDto.setGoalText(savedDetail.getGoalText());
+        updatedDto.setUserId(savedDetail.getMember().getUserId());
+
+        return updatedDto;
     }
+
 
 
 

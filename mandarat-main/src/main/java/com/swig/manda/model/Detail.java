@@ -1,8 +1,11 @@
 package com.swig.manda.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Pattern;
 import lombok.Getter;
 import lombok.Setter;
+
+import java.util.List;
 
 
 @Getter
@@ -11,18 +14,21 @@ import lombok.Setter;
 @Entity
 public class Detail {
 
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-    private String content;
+    private Long missionIndex;
 
-    private String memo;
+
+    private List<String> goalList;
+
+    private String UserId;
+
+    private List<String> goalText;
 
     @ManyToOne
-    @JoinColumn(name = "main_topic_id")
-    private MainTopic mainTopic;
-
-
+    @JoinColumn(name = "member_id")
+    private Member member;
 
 
 

@@ -4,7 +4,17 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="9a5f061e-2214-4e53-87f1-a925f6ee3aac" name="Changes" comment="바뀜" />
+    <list default="true" id="9a5f061e-2214-4e53-87f1-a925f6ee3aac" name="Changes" comment="바뀜">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mandarat-main/src/main/java/com/swig/manda/controller/MandalartController.java" beforeDir="false" afterPath="$PROJECT_DIR$/mandarat-main/src/main/java/com/swig/manda/controller/MandalartController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mandarat-main/src/main/java/com/swig/manda/dto/DetailDto.java" beforeDir="false" afterPath="$PROJECT_DIR$/mandarat-main/src/main/java/com/swig/manda/dto/DetailDto.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mandarat-main/src/main/java/com/swig/manda/dto/MainTopicDto.java" beforeDir="false" afterPath="$PROJECT_DIR$/mandarat-main/src/main/java/com/swig/manda/dto/MainTopicDto.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mandarat-main/src/main/java/com/swig/manda/model/Detail.java" beforeDir="false" afterPath="$PROJECT_DIR$/mandarat-main/src/main/java/com/swig/manda/model/Detail.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mandarat-main/src/main/java/com/swig/manda/model/MainTopic.java" beforeDir="false" afterPath="$PROJECT_DIR$/mandarat-main/src/main/java/com/swig/manda/model/MainTopic.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mandarat-main/src/main/java/com/swig/manda/model/Member.java" beforeDir="false" afterPath="$PROJECT_DIR$/mandarat-main/src/main/java/com/swig/manda/model/Member.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mandarat-main/src/main/java/com/swig/manda/repository/DetailRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/mandarat-main/src/main/java/com/swig/manda/repository/DetailRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mandarat-main/src/main/java/com/swig/manda/service/MadalartService.java" beforeDir="false" afterPath="$PROJECT_DIR$/mandarat-main/src/main/java/com/swig/manda/service/MadalartService.java" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -158,6 +168,11 @@
   <component name="Vcs.Log.Tabs.Properties">
     <option name="TAB_STATES">
       <map>
+        <entry key="990f0821-d7a1-4e78-be65-f87b4ebc3ac5">
+          <value>
+            <State />
+          </value>
+        </entry>
         <entry key="MAIN">
           <value>
             <State>
@@ -175,6 +190,11 @@
             </State>
           </value>
         </entry>
+      </map>
+    </option>
+    <option name="OPEN_GENERIC_TABS">
+      <map>
+        <entry key="990f0821-d7a1-4e78-be65-f87b4ebc3ac5" value="TOOL_WINDOW" />
       </map>
     </option>
   </component>
