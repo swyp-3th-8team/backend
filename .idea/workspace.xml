@@ -4,16 +4,11 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="9a5f061e-2214-4e53-87f1-a925f6ee3aac" name="Changes" comment="바뀜">
+    <list default="true" id="9a5f061e-2214-4e53-87f1-a925f6ee3aac" name="Changes" comment="바뀐목록 push">
+      <change beforePath="$PROJECT_DIR$/.idea/modules/manda.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/modules/manda.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/modules/manda.test.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/modules/manda.test.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mandarat-main/src/main/java/com/swig/manda/controller/MandalartController.java" beforeDir="false" afterPath="$PROJECT_DIR$/mandarat-main/src/main/java/com/swig/manda/controller/MandalartController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mandarat-main/src/main/java/com/swig/manda/dto/DetailDto.java" beforeDir="false" afterPath="$PROJECT_DIR$/mandarat-main/src/main/java/com/swig/manda/dto/DetailDto.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mandarat-main/src/main/java/com/swig/manda/dto/MainTopicDto.java" beforeDir="false" afterPath="$PROJECT_DIR$/mandarat-main/src/main/java/com/swig/manda/dto/MainTopicDto.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mandarat-main/src/main/java/com/swig/manda/model/Detail.java" beforeDir="false" afterPath="$PROJECT_DIR$/mandarat-main/src/main/java/com/swig/manda/model/Detail.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mandarat-main/src/main/java/com/swig/manda/model/MainTopic.java" beforeDir="false" afterPath="$PROJECT_DIR$/mandarat-main/src/main/java/com/swig/manda/model/MainTopic.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mandarat-main/src/main/java/com/swig/manda/model/Member.java" beforeDir="false" afterPath="$PROJECT_DIR$/mandarat-main/src/main/java/com/swig/manda/model/Member.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mandarat-main/src/main/java/com/swig/manda/repository/DetailRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/mandarat-main/src/main/java/com/swig/manda/repository/DetailRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/mandarat-main/src/main/java/com/swig/manda/service/MadalartService.java" beforeDir="false" afterPath="$PROJECT_DIR$/mandarat-main/src/main/java/com/swig/manda/service/MadalartService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -74,14 +69,14 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;DefaultHtmlFileTemplate&quot;: &quot;HTML File&quot;,
-    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/Users/sjho7/Downloads/mandarat-main&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "DefaultHtmlFileTemplate": "HTML File",
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "last_opened_file_path": "C:/Users/sjho7/Downloads/backend-end33"
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="C:\Users\sjho7\Downloads\mandarat-main\mandarat-main\build\libs" />
