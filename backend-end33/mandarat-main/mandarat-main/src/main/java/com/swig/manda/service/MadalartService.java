@@ -94,7 +94,6 @@ public class MadalartService {
         dto.setMissionIndex(savedDetail.getMissionIndex());
         dto.setGoalText(savedDetail.getGoalText());
         dto.setGoalList(savedDetail.getGoalList());
-        dto.setId(savedDetail.getId());
         dto.setUserId(savedDetail.getMember().getUserId());
 
         return dto;
@@ -154,7 +153,6 @@ public class MadalartService {
 
     private DetailDto convertDetailEntityToDto(Detail detail) {
         DetailDto detailDto = new DetailDto();
-        detailDto.setId(detail.getId());
         detailDto.setMissionIndex(detail.getMissionIndex());
         detailDto.setGoalText(detail.getGoalText());
         detailDto.setGoalList(detail.getGoalList());
@@ -226,7 +224,6 @@ public class MadalartService {
 
         DetailDto updatedDto = new DetailDto();
         updatedDto.setMissionIndex(savedDetail.getMissionIndex());
-        updatedDto.setId(savedDetail.getId());
         updatedDto.setGoalList(savedDetail.getGoalList());
         updatedDto.setGoalText(savedDetail.getGoalText());
         updatedDto.setUserId(savedDetail.getMember().getUserId());
